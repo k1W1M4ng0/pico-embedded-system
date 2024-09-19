@@ -25,6 +25,12 @@ pacman -S arm-none-eabi-gcc arm-none-eabi-binutils arm-none-eabi-newlib cmake au
 yay -S picotool openocd-picoprobe
 ```
 
+### HomeBrew
+```bash
+brew install cmake
+brew install gcc-arm-embedded
+```
+
 ## Programming
 
         1. get SDK
