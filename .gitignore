@@ -1,4 +1,7 @@
 # Prerequisites
+
+.cache
+.clang
 *.d
 
 # Object files
