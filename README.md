@@ -97,3 +97,8 @@ The FreeRTOS Examples need the Kernel Sources, so don't forget to load the submo
 * https://www.nongnu.org/lwip/2_1_x/group__mqtt.html
 * https://www.elektronik-kompendium.de/sites/raspberry-pi/2709071.htm
 
+
+# important srces
+https://www.freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals
+https://freertos.org/media/2018/FreeRTOS_Reference_Manual_V10.0.0.pdf
+file:///home/venti/Downloads/Mastering-the-FreeRTOS-Real-Time-Kernel.v1.1.0.pdf
