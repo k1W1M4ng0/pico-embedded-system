@@ -97,5 +97,7 @@
 
 /* A header file that defines trace macro can be included here. */
 
+#define configENABLE_MPU 0
+
 #endif /* FREERTOS_CONFIG_H */
 
