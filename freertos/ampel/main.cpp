@@ -30,10 +30,14 @@ TaskHandle_t goBlinkHandle = NULL;
 TaskHandle_t yellowHandle = NULL;
 TaskHandle_t dangerHandle = NULL;
 
+#define RUNNING 3
+#define READY 2
+#define WAITING 1
+
 void halt(void* params) {
     while (true) {
         printf("halt\n");
-        vTaskPrioritySet(NULL, 3);
+        vTaskPrioritySet(NULL, RUNNING);
 
         redPin.set_high();
         yellowPin.set_low();
@@ -41,45 +45,45 @@ void halt(void* params) {
 
         nonBlockingDelay(WAIT);
 
-        vTaskPrioritySet(redYellowHandle, 2);
-        vTaskPrioritySet(NULL, 1);
+        vTaskPrioritySet(redYellowHandle, READY);
+        vTaskPrioritySet(NULL, WAITING);
     }
 }
 
 void redYellow(void* params) {
     while (true) {
         printf("halt 2\n");
-        vTaskPrioritySet(NULL, 3);
+        vTaskPrioritySet(NULL, RUNNING);
 
         redPin.set_high();
         yellowPin.set_high();
         greenPin.set_low();
 
         nonBlockingDelay(WAIT);
-        vTaskPrioritySet(goHandle, 2);
-        vTaskPrioritySet(NULL, 1);
+        vTaskPrioritySet(goHandle, READY);
+        vTaskPrioritySet(NULL, WAITING);
     }
 }
 
 void go(void* params) {
     while (true) {
         printf("go\n");
-        vTaskPrioritySet(NULL, 3);
+        vTaskPrioritySet(NULL, RUNNING);
 
         redPin.set_low();
         yellowPin.set_low();
         greenPin.set_high();
 
         nonBlockingDelay(WAIT);
-        vTaskPrioritySet(goBlinkHandle, 2);
-        vTaskPrioritySet(NULL, 1);
+        vTaskPrioritySet(goBlinkHandle, READY);
+        vTaskPrioritySet(NULL, WAITING);
     }
 }
 
 void goBlink(void* params) {
     while (true) {
         printf("blink go\n");
-        vTaskPrioritySet(NULL, 3);
+        vTaskPrioritySet(NULL, RUNNING);
 
         redPin.set_low();
         yellowPin.set_low();
@@ -97,16 +101,15 @@ void goBlink(void* params) {
         }
 
         // switch
-        vTaskPrioritySet(yellowHandle, 2);
-        vTaskPrioritySet(NULL, 1);
-
+        vTaskPrioritySet(yellowHandle, READY);
+        vTaskPrioritySet(NULL, WAITING);
     }
 }
 
 void onlyYellow(void* params) {
     while (true) {
         printf("halt again\n");
-        vTaskPrioritySet(NULL, 3);
+        vTaskPrioritySet(NULL, RUNNING);
 
         redPin.set_low();
         yellowPin.set_high();
@@ -114,51 +117,26 @@ void onlyYellow(void* params) {
 
         nonBlockingDelay(WAIT);
 
-        vTaskPrioritySet(haltHandle, 2);
-        vTaskPrioritySet(NULL, 1);
+        vTaskPrioritySet(haltHandle, READY);
+        vTaskPrioritySet(NULL, WAITING);
     }
 }
-
 
 int main() {
     stdio_init_all();
 
-    xTaskCreate(halt,     // function
-                "halt",   /* Text name for the task. */
-                1024,     /* Stack size in words, not bytes. */
-                (void*)1, /* Parameter passed into the task. */
-                2,        /* Priority at which the task is created. */
-                &haltHandle);
+    xTaskCreate(halt, "halt", 1024, (void*)1, READY, &haltHandle);
 
-    xTaskCreate(redYellow,     // function
-                "redYellow",   /* Text name for the task. */
-                1024,     /* Stack size in words, not bytes. */
-                (void*)1, /* Parameter passed into the task. */
-                1,        /* Priority at which the task is created. */
+    xTaskCreate(redYellow, "redYellow", 1024, (void*)1, WAITING,
                 &redYellowHandle);
 
-    xTaskCreate(go,     // function
-                "go",   /* Text name for the task. */
-                1024,     /* Stack size in words, not bytes. */
-                (void*)1, /* Parameter passed into the task. */
-                1,        /* Priority at which the task is created. */
-                &goHandle);
+    xTaskCreate(go, "go", 1024, (void*)1, WAITING, &goHandle);
 
-    xTaskCreate(goBlink,     // function
-                "goBlink",   /* Text name for the task. */
-                1024,     /* Stack size in words, not bytes. */
-                (void*)1, /* Parameter passed into the task. */
-                1,        /* Priority at which the task is created. */
-                &goBlinkHandle);
+    xTaskCreate(goBlink, "goBlink", 1024, (void*)1, WAITING, &goBlinkHandle);
 
-    xTaskCreate(onlyYellow,     // function
-                "yellow",   /* Text name for the task. */
-                1024,     /* Stack size in words, not bytes. */
-                (void*)1, /* Parameter passed into the task. */
-                1,        /* Priority at which the task is created. */
-                &yellowHandle);
+    xTaskCreate(onlyYellow, "yellow", 1024, (void*)1, WAITING, &yellowHandle);
 
-    // xTaskCreate(danger,     // function
+    // xTaskCreate(danger,
     //             "danger",   /* Text name for the task. */
     //             1024,     /* Stack size in words, not bytes. */
     //             (void*)1, /* Parameter passed into the task. */
