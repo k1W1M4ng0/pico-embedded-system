@@ -5,10 +5,13 @@
 #include <array>
 #include <stdio.h>
 
+TickType_t currentTick;
+
+
 #define nonBlockingDelay(x)                                                    \
-    \ 
-    TickType_t currentTick = xTaskGetTickCount();                              \
-    while (xTaskGetTickCount() - currentTick < x)
+    {printf("delay ticks %d\n", x); \
+    vTaskDelay(x);}
+    // while (xTaskGetTickCount() - currentTick < x)
 
 #define WAIT 4000
 
@@ -143,6 +146,7 @@ int main() {
     //             2,        /* Priority at which the task is created. */
     //             &dangerHandle);
 
+    currentTick = xTaskGetTickCount();                              \
     vTaskStartScheduler();
 
     while (1) {
